@@ -1,11 +1,11 @@
 # Minimal makefile for Sphinx documentation
 #
 
-# You can set these variables from the command line.
-SPHINXOPTS    = -E -a #-W
-SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = structify_net
-SOURCEDIR     = .
+# You can set these variables from the command line, and also
+# from the environment for the first two.
+SPHINXOPTS    ?= --fresh-env --write-all # --fail-on-warning
+SPHINXBUILD   ?= sphinx-build
+SOURCEDIR     = source
 BUILDDIR      = build
 
 # Put it first so that "make" without argument is like "make help".
