@@ -41,5 +41,6 @@ This library also contains a set of tools to visualize (:mod:`viz`) and score (:
    Zoo
    Visualization   
    Scoring
+   API Reference <api/structify_net>
 
 
