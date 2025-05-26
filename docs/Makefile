@@ -15,7 +15,7 @@ help:
 .PHONY: help
 
 clean:
-	rm -Rf "$(SOURCEDIR)/generated" "$(SOURCEDIR)/api"
+	rm -Rf "$(SOURCEDIR)/api"
 	@$(SPHINXBUILD) -M clean "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 html:

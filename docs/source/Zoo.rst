@@ -30,9 +30,8 @@ Individual models
 -----------------
 
 .. autosummary::
-   :toctree: generated/
    
-      zoo.sort_ER
+   zoo.sort_ER
    zoo.sort_distances
    zoo.sort_blocks_assortative
    zoo.sort_overlap_communities
@@ -49,6 +48,5 @@ Individual models
 function to get instanciated model collections
 ----------------------------------------------
  .. autosummary::
-   :toctree: generated/
 
    zoo.get_all_rank_models

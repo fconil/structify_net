@@ -32,11 +32,11 @@ Example of code on a graph model:
    model.scores(m=1000)
    model.scores(m=1000,scores={"coreness":scoring.coreness},epsilons=[0,0.1,0.2],runs=3,)
 
+
 Individual scoring functions
 ----------------------------
 
 .. autosummary::
-   :toctree: generated/
 
    scoring.has_giant_component
    scoring.giant_component_ratio
@@ -56,7 +56,6 @@ Useful functions
 ----------------
 
 .. autosummary::
-   :toctree: generated/
    
    scoring.compute_all_scores
    scoring.scores_for_graphs

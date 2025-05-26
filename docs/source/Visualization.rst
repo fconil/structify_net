@@ -17,7 +17,6 @@ Individual models
 -----------------
 
 .. autosummary::
-   :toctree: generated/
 
     viz.plot_adjacency_matrix
     viz.spider_plot
