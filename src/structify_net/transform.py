@@ -1,9 +1,14 @@
-import itertools
+# pylint: skip-file
+
+# import itertools
+from bisect import bisect
+
+import matplotlib.pyplot as plt
+import networkx as nx
 import numpy as np
 from scipy.special import comb
-from bisect import bisect
-import networkx as nx
-import structify_net as stn
+
+# import structify_net as stn
 
 # def _structure2graph(nodes,ranking_function,epsilon,density=None,m=None):
 #     model = _structure2model(nodes,ranking_function,epsilon,density,m)
@@ -33,8 +38,8 @@ def _proba2graph(sortedPairs, probas):
 def _rank2proba(rank_model,epsilon,density=None,m=None,):
 
     sorted_pairs=rank_model.sortedPairs
-    if density==None:
-        if m==None:
+    if density is None:
+        if m is None:
             raise Exception("You must specify either a density or a number of edges")
         else:
             density=m/len(sorted_pairs)
