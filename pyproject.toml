@@ -30,7 +30,7 @@ Documentation = "http://structify-net.readthedocs.io"
 GitHub = "https://github.com/Yquetzal/structify_net"
 
 [dependency-groups]
-dev = ["sphinx", "sphinx_rtd_theme", "pytest", "jupyterlab", "ipywidgets"]
+dev = ["sphinx", "sphinx_rtd_theme", "sphinx-lint", "pytest", "jupyterlab", "ipywidgets"]
 
 [tool.hatch.version]
 source = "vcs"

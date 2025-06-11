@@ -10,12 +10,12 @@ The zoo collection of structures is in the  :mod:`zoo` submodule.
 Example of usage:
 
 .. code-block:: python
-    
+
     import structify_net.zoo
     rank_model = zoo.sort_nestedness(nodes=100)
     g = rank_model.generate_graph(epsilon=0.1, m=1000)
 
-There are some useful shortcuts to get collection of structures from the 
+There are some useful shortcuts to get collection of structures from the
 
 - :data:`zoo.all_models_no_param`: contains all the model functions that do not require any parameter.
 - :data:`zoo.all_models_with_m`: returns all the model functions that require a parameter `m` (Expected number of edges).
@@ -30,7 +30,7 @@ Individual models
 -----------------
 
 .. autosummary::
-   
+
    zoo.sort_ER
    zoo.sort_distances
    zoo.sort_blocks_assortative
@@ -44,7 +44,7 @@ Individual models
    zoo.sort_nestedness
    zoo.sort_fractal_hierarchical
    zoo.sort_fractal_star
-   
+
 function to get instanciated model collections
 ----------------------------------------------
  .. autosummary::

@@ -13,9 +13,9 @@ What is Structify_net?
 
 Structify_net is a python library allowing to create networks with a predefined structure, and a chosen number of nodes and links.
 
-The principle is to use a common framework to encompass community/bloc structure, spatial structure, and many other types of structures. 
+The principle is to use a common framework to encompass community/bloc structure, spatial structure, and many other types of structures.
 
-More specifically, a structure is defined by: 
+More specifically, a structure is defined by:
 
 * a number of nodes `n`
 * a ranking of all the pairs of nodes, from most likely to be present to less likely to be present.
@@ -39,8 +39,7 @@ This library also contains a set of tools to visualize (:mod:`viz`) and score (:
    Tutorial/Tutorial
    Classes
    Zoo
-   Visualization   
+   Visualization
    Scoring
    API Reference <api/structify_net>
-
-
+   General index <genindex>

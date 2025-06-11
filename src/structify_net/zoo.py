@@ -313,10 +313,14 @@ def sort_core_distance(nodes, dimensions=1, distance="euclidean"):
     """Rank model based on the sum of the distance of their nodes to the center of the space.
 
     Core periphery structure is another well-known type of organization for complex systems. This organization is often modeled using blocks, one block being the dense core, another block, internally sparse, represent the periphery, and the density between the two blocks is set at an intermediate value. To illustrate the flexibility of the Rank approach, we propose a soft-core alternative, the coreness dissolving progressively into a periphery. To do so, we consider nodes embedded into a space, as for the spatial structure --random 1d positions by default. The node-pair rank score is computed as the inverse of the product of 3 distances: the distances from both nodes to the center, and the distance between the two nodes. As a consequence, when two nodes belong to the center, they are very likely to be connected; two nodes far from the center are unlikely to be connected, unless if they are extremely close from each other.
-    \[
-    R'(u,v)=d(W_u,W_v)d(W_u,\mathbf{0})d(W_v,\mathbf{0})
-    \]
-    With $\mathbf{0}$ the vector corresponding to the center of the location considered as the core of the space.
+
+    .. math::
+
+        [
+        R'(u,v)=d(W_u,W_v)d(W_u,\\mathbf{0})d(W_v,\\mathbf{0})
+        ]
+    
+    With :math:`\\mathbf{0}` the vector corresponding to the center of the location considered as the core of the space.
 
     Args:
         nodes (_type_): Describe nodes. Can be either a networkx graph (node names and node attributes are preserved) or an integer (number of nodes)

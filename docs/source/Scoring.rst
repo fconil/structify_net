@@ -17,7 +17,7 @@ The function :func:`scoring.get_default_scores` return the default_scores in a c
 Example of code on a single graph:
 
 .. code-block:: python
-    
+
    import structify_net.scoring
    g=nx.karate_club_graph()
    score=scoring.hierarchy(g)
@@ -26,7 +26,7 @@ Example of code on a single graph:
 Example of code on a graph model:
 
 .. code-block:: python
-    
+
    import structify_net.scoring
    model=zoo.sort_nestedness(nodes=100)
    model.scores(m=1000)
@@ -56,7 +56,7 @@ Useful functions
 ----------------
 
 .. autosummary::
-   
+
    scoring.compute_all_scores
    scoring.scores_for_graphs
    scoring.scores_for_generators
