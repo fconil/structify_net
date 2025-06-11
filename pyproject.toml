@@ -1,14 +1,10 @@
 [build-system]
-# TODO : setuptools 45 / 2020, setuptools 69 / 2024, dernier 78 / 2025
-# requires = ["setuptools>=64", "setuptools-scm>=8"]
-requires = ["setuptools>=64"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
 
 [project]
 name = "structify-net"
-
-# This is not the real repo with a tag yet
-version = "0.9.50.post1"
+dynamic = ["version"]
 description='Network Generation with controlled structure'
 readme='pypi.md'
 authors = [
@@ -36,6 +32,12 @@ GitHub = "https://github.com/Yquetzal/structify_net"
 [dependency-groups]
 dev = ["sphinx", "sphinx_rtd_theme", "pytest", "jupyterlab", "ipywidgets"]
 
-# [tool.setuptools_scm]
-# version_scheme = "post-release"
-# local_scheme = "no-local-version"
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/structify_net/_version.py"
+
+[tool.hatch.version.raw-options]
+version_scheme = "no-guess-dev"
+local_scheme = "no-local-version"
