@@ -1,34 +1,78 @@
 # structify-net
-Structify_net is a python library allowing to create networks with a predefined structure, and a chosen number of nodes and links.
 
-The principle is to use a common framework to encompass community/bloc structure, spatial structure, and many other types of structures.
+## Description
 
-More specifically, a structure is defined by:
+**structify-net** is a Python library for generating networks with customizable structures, node counts, and link numbers. It provides a unified framework to model various network structures, including community/bloc structures, spatial structures, and more.
 
-* a number of nodes n
-* a ranking of all the pairs of nodes, from most likely to be present to less likely to be present.
+A structure is defined by:
+- The number of nodes `n`
+- A ranking of all node pairs, from most likely to least likely to be connected
 
+---
 
------
-# Insallation
-You can install this library using pip:
+## Documentation
 
-```
+- Full documentation: [https://structify-net.readthedocs.io/en/latest/](https://structify-net.readthedocs.io/en/latest/)
+- Method description: See our upcoming paper (to be published)
+
+---
+
+## Installation
+
+To install the latest release of structify-net, use:
+
+```bash
 pip install structify-net
 ```
 
-You can then import it and its modules as:
+## Usage
 
-```
+Once installed, you can import the main modules as follows:
+
+```python
 import structify_net as stn
 import structify_net.viz as viz
 import structify_net.zoo as zoo
 import structify_net.scoring as scoring
 ```
 
-----
+---
 
-# Documentation
-* The documentation of the library can be found at the following address: https://structify-net.readthedocs.io/en/latest/
+## Development
 
-* The method is described in a paper (yet to be published)
+If you want to contribute or work on structify-net, follow these steps:
+
+### Install in editable mode with development dependencies
+
+To set up the development environment, you can install the package in [editable mode](https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs) along with the [dependency group](https://pip.pypa.io/en/stable/user_guide/#dependency-groups) named `dev`.
+
+Editable mode allows you to make changes to the source code and have them immediately reflected without reinstalling the package. This is useful for development and testing.
+
+```bash
+pip install -e . --group dev
+```
+
+---
+
+### If you want to use uv
+
+If you want to use the new [uv](https://github.com/astral-sh/uv) tool.
+
+1. Create a virtual environment
+
+```bash
+uv venv .venv
+source .venv/bin/activate
+```
+
+2. Install structify-net in editable mode
+
+```bash
+uv pip install -e .
+```
+
+3. Install the packages of the `dev` dependency group with [uv sync](https://docs.astral.sh/uv/reference/cli/#uv-sync)
+
+```bash
+uv sync --group dev
+```
