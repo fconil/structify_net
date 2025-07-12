@@ -8,10 +8,10 @@ import networkx as nx
 # import numpy as np
 import scipy.special
 
-import structify_net as stn
+# import structify_net as stn
 import structify_net.scoring as scoring
 import structify_net.transform as transform
-import structify_net.viz as viz
+# import structify_net.viz as viz
 import structify_net.zoo as zoo
 
 
@@ -83,7 +83,10 @@ class Graph_generator:
         Returns:
             _type_: a matplotlib plot
         """
-        return viz._plot_proba_function(self, cumulative=cumulative, ax=ax)
+        from structify_net.viz import _plot_proba_function
+
+        #return viz._plot_proba_function(self, cumulative=cumulative, ax=ax)
+        return _plot_proba_function(self, cumulative=cumulative, ax=ax)
 
     def plot_matrix(self, nodeOrder=None, ax=None, **kwargs):
         """Plot a matrix of the  graph generator
@@ -94,10 +97,13 @@ class Graph_generator:
             nodeOrder (_type_, optional): the order in which the nodes should be plotted. Defaults to None.
             ax (_type_, optional): an axis to plot on. Defaults to None.
         """
+        from structify_net.viz import _plot_matrix
+
         if nodeOrder is None:
             nodeOrder = self.rank_model.node_order
 
-        viz._plot_matrix(
+        # viz._plot_matrix(
+        _plot_matrix(
             {self.sortedPairs[i]: self.probas[i] for i in range(len(self.probas))},
             nodeOrder,
             ax=ax,
@@ -224,9 +230,12 @@ class Rank_model:
             nodeOrder (_type_, optional): the order in which the nodes should be plotted. Defaults to None.
             ax (_type_, optional): an axis to plot on. Defaults to None.
         """
+        from structify_net.viz import _plot_rank_matrix
+
         if nodeOrder is None:
             nodeOrder = self.node_order
-        viz._plot_rank_matrix(self, nodeOrder=nodeOrder, ax=ax, **kwargs)
+        # viz._plot_rank_matrix(self, nodeOrder=nodeOrder, ax=ax, **kwargs)
+        _plot_rank_matrix(self, nodeOrder=nodeOrder, ax=ax, **kwargs)
 
     def generate_graph(self, epsilon, density=None, m=None):
         """Generate a graph from this rank model

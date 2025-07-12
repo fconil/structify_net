@@ -2,7 +2,6 @@
 
 import math
 
-# from structify_net.structureClasses import Rank_model, Graph_generator
 import numbers
 
 import networkx as nx
@@ -13,7 +12,9 @@ import pandas as pd
 import scipy
 from tqdm.auto import tqdm
 
-import structify_net as stn
+# import structify_net as stn
+# from structify_net.structureClasses import Rank_model, Graph_generator
+from structify_net import structureClasses
 
 # import tqdm
 
@@ -106,7 +107,7 @@ def average_shortest_path_length(graph, normalized=True):
         else:
             return graph_shortest
 
-    #         ref = Graph_generator.ER(graph.number_of_nodes(),graph.number_of_edges()/graph.number_of_nodes()**2)
+    #         ref = structureClasses.Graph_generator.ER(graph.number_of_nodes(),graph.number_of_edges()/graph.number_of_nodes()**2)
     #         #ref_shortest = nx.average_shortest_path_length(ref)
     #         n= graph.number_of_nodes()
     #         avg_degree=graph.number_of_edges()/n
@@ -141,7 +142,7 @@ def modularity(graph, normalized=True):
         graph, nx.algorithms.community.louvain_communities(graph)
     )
     if normalized:
-        ref_model = stn.Graph_generator.ER(graph.number_of_nodes(), nx.density(graph))
+        ref_model = structureClasses.Graph_generator.ER(graph.number_of_nodes(), nx.density(graph))
         ref_mod = nx.algorithms.community.modularity(
             ref_model, nx.algorithms.community.louvain_communities(ref_model)
         )
@@ -502,7 +503,7 @@ def scores_for_rank_functions(
         _type_: dataframe with the scores
     """
     rank_models = {
-        name: stn.Rank_model(structure_function(n))
+        name: structureClasses.Rank_model(structure_function(n))
         for name, structure_function in rank_functions.items()
     }
     return scores_for_rank_models(

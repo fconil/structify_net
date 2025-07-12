@@ -3,7 +3,7 @@
 # import itertools
 from bisect import bisect
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 from scipy.special import comb
@@ -75,6 +75,8 @@ def _relative_rank2proba_bezier(density, epsilon, nb_bins=100, plot=False):
 
     # Plot curve
     if plot:
+        import matplotlib.pyplot as plt
+        
         fig, (ax1, ax2) = plt.subplots(1, 2)
         ax1.plot(p_x, p_y,'r-')
         ax1.set(ylabel="fraction of all possible edges encountered",xlabel="position of sorted node pairs")

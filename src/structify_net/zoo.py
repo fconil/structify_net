@@ -10,19 +10,23 @@ import perlin_noise
 import scipy
 import scipy.spatial
 
-import structify_net as stn
-
+# import structify_net as stn
+from structify_net import structureClasses
 
 def _assign_ordinal_attributes(nb_nodes, d, g=None):
     if g is None:
         g = nx.Graph()
         g.add_nodes_from(range(nb_nodes))
+    
+    l_dim = [ f"d{i + 1}" for i in range(d) ]
+
     for i_dim in range(d):
         attributes = np.random.random(nb_nodes)
         nx.set_node_attributes(
-            g, {i: a for i, a in enumerate(attributes)}, "d" + str(i_dim + 1)
+            g, {i: a for i, a in enumerate(attributes)}, l_dim[i_dim]
         )
-    return g
+
+    return g, l_dim
 
 
 def _n_to_graph(n):
@@ -40,9 +44,9 @@ def sort_ER(nodes):
         nodes (_type_): describe nodes of the graphs, either as a networkx graph (node names and node attributes are preserved) or an integer (number of nodes)
 
     Returns:
-        :class:`structify_net.Rank_model`:: The corresponding rank model
+        :class:`structify_net.structureClasses.Rank_model`:: The corresponding rank model
     """
-    return stn.Rank_model(nodes, lambda x, y, z: 0)
+    return structureClasses.Rank_model(nodes, lambda x, y, z: 0)
 
 
 def _assign_nominal_attributes(blocks, nb_nodes=None, g=None, name="block1"):
@@ -78,7 +82,7 @@ def sort_distances(nodes, dimensions=1, distance="euclidean"):
         distance (_type_, optional): distance function. Defaults to euclidean.
 
     Returns:
-        :class:`structify_net.Rank_model`:: The corresponding rank model
+        :class:`structify_net.structureClasses.Rank_model`:: The corresponding rank model
     """
 
     if distance == "euclidean":
@@ -89,16 +93,18 @@ def sort_distances(nodes, dimensions=1, distance="euclidean"):
         g = nodes
 
     if isinstance(dimensions, int):
-        g = _assign_ordinal_attributes(len(g.nodes), dimensions)
-        dimensions = ["d" + str(i_dim + 1) for i_dim in range(dimensions)]
+        _, dimensions = _assign_ordinal_attributes(g.number_of_nodes(), dimensions, g)
+        # dimensions = ["d" + str(i_dim + 1) for i_dim in range(dimensions)]
 
     positions = {n: [g.nodes[n][d] for d in dimensions] for n in g.nodes}
 
     def rank_function(u, v, _):
         return distance(positions[u], positions[v])
 
-    node_order = lambda g: sorted(g.nodes, key=lambda n: g.nodes[n][dimensions[0]])
-    return stn.Rank_model(g, rank_function, node_order_function=lambda g: node_order(g))
+    def node_order(g):
+        return sorted(g.nodes, key=lambda n: g.nodes[n][dimensions[0]])
+
+    return structureClasses.Rank_model(g, rank_function, node_order_function=node_order)
 
 
 def sort_perlin_noise(nodes=10, octaves=None):
@@ -112,7 +118,7 @@ def sort_perlin_noise(nodes=10, octaves=None):
         octaves (_type_, optional): Octave parameter of the Perlin noise. The higher the value, the finer the structure. Defaults to None, meaning octaves = int(ln(n))
 
     Returns:
-        :class:`structify_net.Rank_model`:: The corresponding rank model
+        :class:`structify_net.structureClasses.Rank_model`:: The corresponding rank model
     """
     if not isinstance(nodes, nx.Graph):
         g = _n_to_graph(nodes)
@@ -127,7 +133,7 @@ def sort_perlin_noise(nodes=10, octaves=None):
     def rank_function(u, v, g):
         return noise([u / n, v / n])
 
-    return stn.Rank_model(g, rank_function)
+    return structureClasses.Rank_model(g, rank_function)
 
 
 # Defining assortative blocks/communities.
@@ -144,7 +150,7 @@ def sort_blocks_assortative(nodes, blocks=None):
         blocks (_type_, optional): Blocks definition. Can be either a list of lists, where each list is a block, or an integer, in which case the nodes are randomly assigned to the corresponding number of equal size blocks. Defaults to None.
 
     Returns:
-        :class:`structify_net.Rank_model`: The corresponding rank model
+        :class:`structify_net.structureClasses.Rank_model`: The corresponding rank model
     """
     if not isinstance(nodes, nx.Graph):
         g = _n_to_graph(nodes)
@@ -170,7 +176,7 @@ def sort_blocks_assortative(nodes, blocks=None):
     def node_order_function(g):
         return sorted(g.nodes, key=lambda n: g.nodes[n]["block1"])
 
-    return stn.Rank_model(
+    return structureClasses.Rank_model(
         g,
         rank_function,
         node_order_function=lambda g: node_order_function(g),
@@ -192,7 +198,7 @@ def sort_overlap_communities(nodes, blocks=None):
         blocks (_type_, optional): Describe communities. Can be either a list of lists, where each list is a community, or an integer. Defaults to None.
 
     Returns:
-        :class:`structify_net.Rank_model`:: A rank model
+        :class:`structify_net.structureClasses.Rank_model`:: A rank model
     """
     if not isinstance(nodes, nx.Graph):
         g = _n_to_graph(nodes)
@@ -230,7 +236,7 @@ def sort_overlap_communities(nodes, blocks=None):
     node_order = lambda g: sorted(
         nx.get_node_attributes(g, "block1").items(), key=lambda e: e[1], reverse=False
     )
-    return stn.Rank_model(
+    return structureClasses.Rank_model(
         g,
         rank_function,
         node_order_function=lambda g: [e[0] for e in node_order(g)],
@@ -250,7 +256,7 @@ def sort_largest_disconnected_cliques(nodes, m):
         m (_type_): number of edges. This is required to compute the largest possible number of cliques.
 
     Returns:
-        :class:`structify_net.Rank_model`:: _description_
+        :class:`structify_net.structureClasses.Rank_model`:: _description_
     """
     if not isinstance(nodes, nx.Graph):
         g = _n_to_graph(nodes)
@@ -272,7 +278,7 @@ def sort_largest_disconnected_cliques(nodes, m):
     def rank_function(u, v, g):
         return 1 if blocks[u] == blocks[v] else 0
 
-    return stn.Rank_model(g, rank_function, sort_descendent=True)
+    return structureClasses.Rank_model(g, rank_function, sort_descendent=True)
 
 
 def sort_stars(nodes):
@@ -284,7 +290,7 @@ def sort_stars(nodes):
         nodes (_type_): Describe nodes. Can be either a networkx graph (node names and node attributes are preserved) or an integer (number of nodes)
 
     Returns:
-        :class:`structify_net.Rank_model`:: The rank model
+        :class:`structify_net.structureClasses.Rank_model`:: The rank model
     """
     if not isinstance(nodes, nx.Graph):
         g = _n_to_graph(nodes)
@@ -295,7 +301,7 @@ def sort_stars(nodes):
     def R(u, v, g):
         return u * n + v
 
-    return stn.Rank_model(g, R, sort_descendent=False)
+    return structureClasses.Rank_model(g, R, sort_descendent=False)
 
 
 # def sort_stars(nodes):
@@ -306,7 +312,7 @@ def sort_stars(nodes):
 #         g=nodes
 
 #     sorted_pairs=itertools.combinations(g.nodes,2)
-#     return stn.Rank_model(list(sorted_pairs), g)
+#     return structureClasses.Rank_model(list(sorted_pairs), g)
 
 
 def sort_core_distance(nodes, dimensions=1, distance="euclidean"):
@@ -316,10 +322,8 @@ def sort_core_distance(nodes, dimensions=1, distance="euclidean"):
 
     .. math::
 
-        [
         R'(u,v)=d(W_u,W_v)d(W_u,\\mathbf{0})d(W_v,\\mathbf{0})
-        ]
-    
+
     With :math:`\\mathbf{0}` the vector corresponding to the center of the location considered as the core of the space.
 
     Args:
@@ -328,7 +332,7 @@ def sort_core_distance(nodes, dimensions=1, distance="euclidean"):
         distance (_type_, optional): Distance function. Defaults to euclidean.
 
     Returns:
-        :class:`structify_net.Rank_model`:: The rank model
+        :class:`structify_net.structureClasses.Rank_model`:: The rank model
     """
 
     if distance == "euclidean":
@@ -340,22 +344,30 @@ def sort_core_distance(nodes, dimensions=1, distance="euclidean"):
         g = nodes
 
     if isinstance(dimensions, int):
-        g = _assign_ordinal_attributes(len(g.nodes), dimensions)
-        dimensions = ["d" + str(i_dim + 1) for i_dim in range(dimensions)]
+        # We don't want a new graph but the modified graph g
+        # _assign_ordinal_attributes should return the l_dim list, no need to rebuild
+        _, l_dim = _assign_ordinal_attributes(g.number_of_nodes(), dimensions, g)
+        # Do not replace dimensions parameter with a list with the same name
+        # l_dim = ["d" + str(i_dim + 1) for i_dim in range(dimensions)]
 
-    positions = {n: [g.nodes[n][d] for d in dimensions] for n in g.nodes}
+    positions = {n: [g.nodes[n][d] for d in l_dim] for n in g.nodes}
 
     def core_distance(u, v, _):
+        # Define a center parameter
+        # Use the dimensions parameter which should be = len(l_dim)
+        center = [0.5] * dimensions
         return (
-            distance(positions[u], [0.5] * len(dimensions))
-            * distance(positions[v], [0.5] * len(dimensions))
+            distance(positions[u], center)
+            * distance(positions[v], center)
             * distance(positions[u], positions[v])
         )
 
     def node_order_function(g):
+        # "d1" hard coded : l_dim[0]
+        # I'm lost with the scope of the variables used, this make the code not clear for me
         return sorted(g.nodes, key=lambda n: g.nodes[n]["d1"], reverse=False)
 
-    return stn.Rank_model(
+    return structureClasses.Rank_model(
         g, core_distance, sort_descendent=False, node_order_function=node_order_function
     )
 
@@ -370,7 +382,7 @@ def sort_spatial_WS(nodes, k=10):
         k (int, optional): Number of nearest neighbors. Defaults to 10.
 
     Returns:
-        :class:`structify_net.Rank_model`:: The rank model
+        :class:`structify_net.structureClasses.Rank_model`:: The rank model
     """
     if not isinstance(nodes, nx.Graph):
         g = _n_to_graph(nodes)
@@ -383,7 +395,7 @@ def sort_spatial_WS(nodes, k=10):
             return 0
         return 2
 
-    return stn.Rank_model(g, my_dist, sort_descendent=False)
+    return structureClasses.Rank_model(g, my_dist, sort_descendent=False)
 
 
 def sort_fractal_leaves(nodes, d=2):
@@ -396,7 +408,7 @@ def sort_fractal_leaves(nodes, d=2):
         d (int, optional): Degree of the binary tree. Defaults to 2.
 
     Returns:
-        :class:`structify_net.Rank_model`:: A rank model
+        :class:`structify_net.structureClasses.Rank_model`:: A rank model
     """
     if not isinstance(nodes, nx.Graph):
         g = _n_to_graph(nodes)
@@ -416,7 +428,7 @@ def sort_fractal_leaves(nodes, d=2):
     def distance(u, v, _):
         return all_distances["temp_" + str(u)]["temp_" + str(v)]
 
-    return stn.Rank_model(g, distance, sort_descendent=False)
+    return structureClasses.Rank_model(g, distance, sort_descendent=False)
 
 
 def sort_fractal_root(nodes, d=2):
@@ -429,7 +441,7 @@ def sort_fractal_root(nodes, d=2):
         d (int, optional): degree of the binary tree. Defaults to 2.
 
     Returns:
-        :class:`structify_net.Rank_model`:: The rank model
+        :class:`structify_net.structureClasses.Rank_model`:: The rank model
     """
     if not isinstance(nodes, nx.Graph):
         g = _n_to_graph(nodes)
@@ -448,7 +460,7 @@ def sort_fractal_root(nodes, d=2):
     def distance(u, v, _):
         return all_distances["temp_" + str(u)]["temp_" + str(v)]
 
-    return stn.Rank_model(g, distance, sort_descendent=False)
+    return structureClasses.Rank_model(g, distance, sort_descendent=False)
 
 
 def _determine_tree_height(n, d):
@@ -470,7 +482,7 @@ def sort_nestedness(nodes):
         nodes (_type_): Describe nodes. Can be either a networkx graph (node names and node attributes are preserved) or an integer (number of nodes)
 
     Returns:
-        :class:`structify_net.Rank_model`:: The rank model
+        :class:`structify_net.structureClasses.Rank_model`:: The rank model
     """
     if not isinstance(nodes, nx.Graph):
         g = _n_to_graph(nodes)
@@ -480,7 +492,7 @@ def sort_nestedness(nodes):
     def R_nestedness(u, v, _):
         return u + v
 
-    return stn.Rank_model(g, R_nestedness, sort_descendent=False)
+    return structureClasses.Rank_model(g, R_nestedness, sort_descendent=False)
 
 
 def sort_fractal_hierarchical(nodes, d=3):
@@ -493,7 +505,7 @@ def sort_fractal_hierarchical(nodes, d=3):
         d (int, optional): degree of the binary tree. Defaults to 3. 3 allows to have many triangles.
 
     Returns:
-        :class:`structify_net.Rank_model`:: The rank model
+        :class:`structify_net.structureClasses.Rank_model`:: The rank model
     """
     if not isinstance(nodes, nx.Graph):
         g = _n_to_graph(nodes)
@@ -536,7 +548,7 @@ def sort_fractal_hierarchical(nodes, d=3):
     def R_fractal(u, v, _):
         return child_score(u, v) if child_of(u, v) else family_score(u, v)
 
-    return stn.Rank_model(g, R_fractal, sort_descendent=False)
+    return structureClasses.Rank_model(g, R_fractal, sort_descendent=False)
 
 
 def sort_fractal_star(nodes, d=2):
@@ -549,7 +561,7 @@ def sort_fractal_star(nodes, d=2):
         d (int, optional): degree of the binary tree. Defaults to 2.
 
     Returns:
-        :class:`structify_net.Rank_model`:: rank model
+        :class:`structify_net.structureClasses.Rank_model`:: rank model
     """
     if not isinstance(nodes, nx.Graph):
         g = _n_to_graph(nodes)
@@ -571,7 +583,7 @@ def sort_fractal_star(nodes, d=2):
     def rank(u, v, _):
         return abs(heights["temp_" + str(u)] - heights["temp_" + str(v)])
 
-    return stn.Rank_model(g, rank, sort_descendent=True)
+    return structureClasses.Rank_model(g, rank, sort_descendent=True)
 
 
 all_models_no_param = {
