@@ -1,18 +1,25 @@
-# pylint: skip-file
+"""
+There are two classes allowing to represent network structures.
+
+- **Graph_generator** is a model that can directly generate networks with a given
+  number of nodes and expected number of edges.
+  An instance can be created from Rank_model class
+
+- `Rank_model` is used to represent a network structure with a given number of nodes,
+  and define the ranking of its node pairs, but is independent on the desired number
+  of edges and of the function used to define the probability to observe an edge
+  between two nodes given their rank
+"""
 
 import itertools
 import random
 
 import networkx as nx
-
-# import numpy as np
 import scipy.special
 
-# import structify_net as stn
 import structify_net.scoring as scoring
 import structify_net.transform as transform
-# import structify_net.viz as viz
-import structify_net.zoo as zoo
+from structify_net.utils import n_to_graph
 
 
 class Graph_generator:
@@ -122,7 +129,7 @@ class Graph_generator:
         Returns:
             pd.DataFrame: a dataframe with the scores
         """
-        return stn.scores_for_generators(
+        return scoring.scores_for_generators(
             self, scores=scores, runs=runs, details=details, latex_names=latex_names
         )
 
@@ -182,7 +189,7 @@ class Rank_model:
             node_order_function (_type_, optional): A function definiting an order on the nodes, for plotting. Defaults to None.
         """
         if not isinstance(nodes, nx.Graph):
-            g = zoo._n_to_graph(nodes)
+            g = n_to_graph(nodes)
         else:
             g = nodes
 
@@ -235,7 +242,7 @@ class Rank_model:
         if nodeOrder is None:
             nodeOrder = self.node_order
         # viz._plot_rank_matrix(self, nodeOrder=nodeOrder, ax=ax, **kwargs)
-        _plot_rank_matrix(self, nodeOrder=nodeOrder, ax=ax, **kwargs)
+        return _plot_rank_matrix(self, nodeOrder=nodeOrder, ax=ax, **kwargs)
 
     def generate_graph(self, epsilon, density=None, m=None):
         """Generate a graph from this rank model

@@ -1,3 +1,18 @@
+"""
+The scoring submodule contains a collection of scoring function to describe
+graphs.
+
+The scoring function are used to compare graphs.
+
+The module contains the following dictionaries :
+
+- default_scores: contains all available scores {name: score function}
+- size: contains additional scores describing the size of the graphs
+  (number of nodes, number of edges)
+- score_names: contains a dictionary to convert plain score names to short
+  latex names
+"""
+
 # pylint: skip-file
 
 import math
@@ -142,7 +157,9 @@ def modularity(graph, normalized=True):
         graph, nx.algorithms.community.louvain_communities(graph)
     )
     if normalized:
-        ref_model = structureClasses.Graph_generator.ER(graph.number_of_nodes(), nx.density(graph))
+        ref_model = structureClasses.Graph_generator.ER(
+            graph.number_of_nodes(), nx.density(graph)
+        )
         ref_mod = nx.algorithms.community.modularity(
             ref_model, nx.algorithms.community.louvain_communities(ref_model)
         )

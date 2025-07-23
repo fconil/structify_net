@@ -32,11 +32,12 @@ traduction de manière automatique assez facilement ? (Chaque bloc du notebook
 peut donner lieu à une fonction de test…).
 """
 
-import pytest
 import networkx as nx
 import numpy as np
-# from unittest import mock
+import pytest
 
+# from unittest import mock
+import structify_net as stn
 from structify_net.zoo import sort_core_distance
 
 # src/structify_net/test_zoo.py
@@ -51,7 +52,7 @@ def mock_rank_model(monkeypatch):
             self.rank_fn = rank_fn
             self.sort_descendent = sort_descendent
             self.node_order_function = node_order_function
-    monkeypatch.setattr("structify_net.structureClasses.Rank_model", DummyRankModel)
+    monkeypatch.setattr("structify_net.Rank_model", DummyRankModel)
     return DummyRankModel
 
 # 2. Pas sûre que ce test soit utile
